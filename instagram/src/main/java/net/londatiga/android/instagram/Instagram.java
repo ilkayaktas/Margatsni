@@ -31,6 +31,7 @@ public class Instagram {
 	private String mClientId;
 	private String mClientSecret;
 	private String mRedirectUri;
+	private String mScope;
 	
 	/**
 	 * Instantiate new object of this class.
@@ -40,14 +41,15 @@ public class Instagram {
 	 * @param clientSecret Client secret
 	 * @param redirectUri Redirect uri
 	 */
-	public Instagram(Context context, String clientId, String clientSecret, String redirectUri) {
+	public Instagram(Context context, String clientId, String clientSecret, String redirectUri, String scope) {
 		mContext		= context;
 		
 		mClientId		= clientId;
 		mClientSecret	= clientSecret;
 		mRedirectUri	= redirectUri;
+		mScope			= scope;
 		
-		String authUrl	= Cons.AUTH_URL + "client_id=" + mClientId + "&redirect_uri=" + mRedirectUri + "&response_type=code";
+		String authUrl	= Cons.AUTH_URL + "client_id=" + mClientId + "&redirect_uri=" + mRedirectUri + "&response_type=code"+"&scope="+mScope;
 		
 		mSession		= new InstagramSession(context);
 		

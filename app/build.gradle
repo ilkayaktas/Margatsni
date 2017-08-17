@@ -57,7 +57,4 @@ dependencies {
     // Lovely Dialog
     compile "com.yarolegovich:lovely-dialog:$rootProject.lovelydialog"
 
-    // Jinstagram
-    compile group: 'com.sachinhandiekar', name: 'jInstagram', version: '1.2.1'
-    compile project(path: ':instagram')
 }
