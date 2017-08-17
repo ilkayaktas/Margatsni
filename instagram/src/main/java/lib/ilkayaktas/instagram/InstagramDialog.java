@@ -5,10 +5,7 @@ import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,8 +18,6 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
-import lib.ilkayaktas.android.instagram.R;
 
 /**
  * Authentication and authorization dialog.
@@ -114,19 +109,6 @@ public class InstagramDialog extends Dialog {
 	private void setUpTitle() {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 	        
-		Drawable icon = getContext().getResources().getDrawable(R.drawable.instagram);
-	        
-		mTitle = new TextView(getContext());
-	        
-		mTitle.setText("Instagram");
-		mTitle.setTextColor(Color.WHITE);
-		mTitle.setTypeface(Typeface.DEFAULT_BOLD);
-		mTitle.setBackgroundColor(0xFF163753);
-		mTitle.setPadding(MARGIN + PADDING, MARGIN, MARGIN, MARGIN);
-		mTitle.setCompoundDrawablePadding(MARGIN + PADDING);
-		mTitle.setCompoundDrawablesWithIntrinsicBounds(icon, null, null, null);
-	        
-		mContent.addView(mTitle);
 	}
 
 	private void setUpWebView() {
@@ -207,12 +189,6 @@ public class InstagramDialog extends Dialog {
 		@Override
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
-			
-			String title = mWebView.getTitle();
-			
-			if (title != null && title.length() > 0) {
-				mTitle.setText(title);
-			}
 			
 			mSpinner.dismiss();
 		}
