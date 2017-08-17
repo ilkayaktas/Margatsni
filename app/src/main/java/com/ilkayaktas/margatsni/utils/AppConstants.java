@@ -42,6 +42,10 @@ public final class AppConstants {
     
     public static final int REPORT_RECORD_HISTORY_COUNT = 10;
 
+    public static final String INSTAGRAM_CLIENT_ID = "82d5b817e82e41c39352649e29fd864e";
+    public static final String INSTAGRAM_CLIENT_SECRET = "d570e68a21f544298256a2fb804739b1";
+    public static final String INSTAGRAM_CALBACK_URL = "http://www.ilkayaktas.com";
+
     private AppConstants() {
         // This utility class is not publicly instantiable
     }
