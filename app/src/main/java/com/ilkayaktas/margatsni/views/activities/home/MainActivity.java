@@ -14,14 +14,13 @@ import com.ilkayaktas.margatsni.views.activities.base.BaseActivity;
 import com.ilkayaktas.margatsni.views.widgets.dialogs.rateme.Config;
 import com.ilkayaktas.margatsni.views.widgets.dialogs.rateme.RateMe;
 
-import net.londatiga.android.instagram.Instagram;
-import net.londatiga.android.instagram.InstagramRequest;
-import net.londatiga.android.instagram.InstagramSession;
-import net.londatiga.android.instagram.InstagramUser;
-
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
+import lib.ilkayaktas.instagram.Instagram;
+import lib.ilkayaktas.instagram.InstagramRequest;
+import lib.ilkayaktas.instagram.InstagramSession;
+import lib.ilkayaktas.instagram.InstagramUser;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 

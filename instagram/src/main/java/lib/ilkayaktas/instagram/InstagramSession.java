@@ -1,6 +1,4 @@
-package net.londatiga.android.instagram;
-
-import net.londatiga.android.instagram.InstagramUser;
+package lib.ilkayaktas.instagram;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;

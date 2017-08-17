@@ -1,4 +1,4 @@
-package net.londatiga.android.instagram;
+package lib.ilkayaktas.instagram;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -20,7 +20,9 @@ import org.apache.http.message.BasicNameValuePair;
 
 import android.os.AsyncTask;
 
-import net.londatiga.android.instagram.util.*;
+import lib.ilkayaktas.instagram.util.Cons;
+import lib.ilkayaktas.instagram.util.Debug;
+import lib.ilkayaktas.instagram.util.StringUtil;
 
 /**
  * Http request to instagram api.

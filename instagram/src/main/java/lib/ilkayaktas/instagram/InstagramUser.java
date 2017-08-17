@@ -1,4 +1,4 @@
-package net.londatiga.android.instagram;
+package lib.ilkayaktas.instagram;
 
 /**
  * Instagram user

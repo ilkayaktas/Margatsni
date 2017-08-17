@@ -57,4 +57,5 @@ dependencies {
     // Lovely Dialog
     compile "com.yarolegovich:lovely-dialog:$rootProject.lovelydialog"
 
+    compile project(path: ':instagram')
 }

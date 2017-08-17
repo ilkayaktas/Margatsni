@@ -1,4 +1,4 @@
-package net.londatiga.android.instagram;
+package lib.ilkayaktas.instagram;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -21,6 +21,8 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import lib.ilkayaktas.android.instagram.R;
 
 /**
  * Authentication and authorization dialog.
@@ -102,11 +104,17 @@ public class InstagramDialog extends Dialog {
 	        
 		addContentView(mContent, new FrameLayout.LayoutParams((int) dimensions[0], (int) dimensions[1]));
 	}
-
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		mWebView.destroy();
+	}
+	
 	private void setUpTitle() {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 	        
-		Drawable icon = getContext().getResources().getDrawable(R.drawable.icon);
+		Drawable icon = getContext().getResources().getDrawable(R.drawable.instagram);
 	        
 		mTitle = new TextView(getContext());
 	        

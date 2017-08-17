@@ -1,4 +1,4 @@
-package net.londatiga.android.instagram.util;
+package lib.ilkayaktas.instagram.util;
 
 import java.io.BufferedReader;
 import java.io.IOException;

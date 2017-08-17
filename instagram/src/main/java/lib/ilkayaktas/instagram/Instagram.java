@@ -1,10 +1,8 @@
-package net.londatiga.android.instagram;
+package lib.ilkayaktas.instagram;
 
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
-
-import net.londatiga.android.instagram.util.Cons;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
@@ -14,6 +12,8 @@ import org.json.JSONTokener;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+
+import lib.ilkayaktas.instagram.util.Cons;
 
 /**
  * Instragam main class.
