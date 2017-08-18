@@ -10,6 +10,8 @@ import com.ilkayaktas.margatsni.di.annotations.ApplicationContext;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
+import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
+
 
 /**
  * Created by ilkay on 11/03/2017.
@@ -39,5 +41,15 @@ public class DataManager implements IDataManager {
 	@Override
 	public void setDatabaseCreatedStatus() {
 		mIPreferenceHelper.setDatabaseCreatedStatus();
+	}
+
+	@Override
+	public UserInfo autorize() {
+		return null;
+	}
+
+	@Override
+	public UserInfo getCurrentUser() {
+		return null;
 	}
 }

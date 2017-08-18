@@ -40,9 +40,6 @@ public class InstagramDialog extends Dialog {
 	static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 			ViewGroup.LayoutParams.MATCH_PARENT);
 	
-	static final int MARGIN = 8;
-	static final int PADDING = 2;
-	
 	static final String TAG = "Instagram-Android";
 	
 	public InstagramDialog(Context context, String authUrl, String redirectUri, InstagramDialogListener listener) {
@@ -53,7 +50,6 @@ public class InstagramDialog extends Dialog {
 		mRedirectUri	= redirectUri;
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

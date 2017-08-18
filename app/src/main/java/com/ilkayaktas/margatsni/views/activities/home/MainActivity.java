@@ -20,10 +20,10 @@ import butterknife.ButterKnife;
 import lib.ilkayaktas.instagram.Instagram;
 import lib.ilkayaktas.instagram.InstagramRequest;
 import lib.ilkayaktas.instagram.InstagramSession;
-import lib.ilkayaktas.instagram.InstagramUser;
 import lib.ilkayaktas.instagram.http.Verbs;
 import lib.ilkayaktas.instagram.model.api.Endpoints;
 import lib.ilkayaktas.instagram.model.api.Scope;
+import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -69,13 +69,13 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
 	private Instagram.InstagramAuthListener mAuthListener = new Instagram.InstagramAuthListener() {
 		@Override
-		public void onSuccess(InstagramUser user) {
+		public void onSuccess(UserInfo user) {
 			finish();
 			Toast.makeText(MainActivity.this, user.accessToken, Toast.LENGTH_SHORT).show();
 
 			InstagramRequest request = new InstagramRequest(user.accessToken);
 
-				request.createRequest(Verbs.GET, Endpoints.USERS_SELF_LIKED_MEDIA, null, new InstagramRequest.InstagramRequestListener(){
+				request.createRequest(Verbs.GET, Endpoints.USERS_SELF, null, new InstagramRequest.InstagramRequestListener(){
 
 					@Override
 					public void onSuccess(String response) {
@@ -87,7 +87,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
 					}
 				});
-
 
 			mInstagram.resetSession();
 		}

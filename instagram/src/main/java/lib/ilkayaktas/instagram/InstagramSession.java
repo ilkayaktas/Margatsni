@@ -7,6 +7,8 @@ import android.content.Context;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 
+import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
+
 /**
  * Manage access token and user data. Token and user data data are stored in shared preferences.
  * 
@@ -34,14 +36,14 @@ public class InstagramSession {
 	 * 
 	 * @param user User data
 	 */
-	public void store(InstagramUser user) {
+	public void store(UserInfo user) {
 		Editor editor = mSharedPref.edit();
 		
-		editor.putString(ACCESS_TOKEN,  user.accessToken);
-		editor.putString(USERID, 		user.id);
-		editor.putString(USERNAME, 		user.username);
-		editor.putString(FULLNAME, 		user.fullName);
-		editor.putString(PROFILPIC, 	user.profilPicture);
+		editor.putString(ACCESS_TOKEN, user.accessToken);
+		editor.putString(USERID, user.user.id);
+		editor.putString(USERNAME, user.user.username);
+		editor.putString(FULLNAME, user.user.fullName);
+		editor.putString(PROFILPIC, user.user.profilePicture);
 		
 		editor.commit();
 	}
@@ -52,11 +54,11 @@ public class InstagramSession {
 	public void reset() {
 		Editor editor = mSharedPref.edit();
 		
-		editor.putString(ACCESS_TOKEN, 	"");
-		editor.putString(USERID, 		"");
-		editor.putString(USERNAME, 		"");
-		editor.putString(FULLNAME, 		"");
-		editor.putString(PROFILPIC, 	"");
+		editor.putString(ACCESS_TOKEN, "");
+		editor.putString(USERID, "");
+		editor.putString(USERNAME, "");
+		editor.putString(FULLNAME, "");
+		editor.putString(PROFILPIC, "");
 		
 		editor.commit();
 		
@@ -71,18 +73,18 @@ public class InstagramSession {
 	 * 
 	 * @return User data
 	 */
-	public InstagramUser getUser() {
+	public UserInfo getUser() {
 		if (mSharedPref.getString(ACCESS_TOKEN, "").equals("")) {
 			return null;
 		}
+
+		UserInfo user 	= new UserInfo();
 		
-		InstagramUser user 	= new InstagramUser();
-		
-		user.id				= mSharedPref.getString(USERID, "");
-		user.username		= mSharedPref.getString(USERNAME, "");
-		user.fullName		= mSharedPref.getString(FULLNAME, "");
-		user.profilPicture	= mSharedPref.getString(PROFILPIC, "");
-		user.accessToken	= mSharedPref.getString(ACCESS_TOKEN, "");
+		user.user.id = mSharedPref.getString(USERID, "");
+		user.user.username = mSharedPref.getString(USERNAME, "");
+		user.user.fullName = mSharedPref.getString(FULLNAME, "");
+		user.user.profilePicture = mSharedPref.getString(PROFILPIC, "");
+		user.accessToken = mSharedPref.getString(ACCESS_TOKEN, "");
 		
 		return user;
 	}

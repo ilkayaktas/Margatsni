@@ -17,6 +17,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import lib.ilkayaktas.instagram.exceptions.InstagramException;
 import lib.ilkayaktas.instagram.http.Verbs;
 import lib.ilkayaktas.instagram.util.LibConstants;
 import lib.ilkayaktas.instagram.util.Log;
@@ -231,7 +232,7 @@ public class InstagramRequest {
 			Log.i("Response " + response);
 			
 			if (httpResponse.getStatusLine().getStatusCode() != 200) {
-				throw new Exception(httpResponse.getStatusLine().getReasonPhrase());
+				throw new InstagramException(httpResponse.getStatusLine().getReasonPhrase());
 			}			
 		} catch (Exception e) {
 			throw e;

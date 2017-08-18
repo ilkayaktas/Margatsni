@@ -4,17 +4,19 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import org.apache.http.NameValuePair;
-import org.apache.http.message.BasicNameValuePair;
-import org.json.JSONObject;
-import org.json.JSONTokener;
+import com.google.gson.Gson;
 
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
+import lib.ilkayaktas.instagram.exceptions.InstagramException;
 import lib.ilkayaktas.instagram.model.api.Scope;
+import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
 import lib.ilkayaktas.instagram.util.LibConstants;
+import retrofit2.Call;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Instragam main class.
@@ -22,7 +24,7 @@ import lib.ilkayaktas.instagram.util.LibConstants;
  * @author Lorensius W. L. T <lorenz@londatiga.net>
  *
  */
-public class Instagram {
+public class Instagram{
 	private Context mContext;
 	
 	private InstagramDialog mDialog;
@@ -43,17 +45,18 @@ public class Instagram {
 	 * @param redirectUri Redirect uri
 	 */
 	public Instagram(Context context, String clientId, String clientSecret, String redirectUri, Scope scope) {
-		mContext		= context;
+		mContext = context;
 		
-		mClientId		= clientId;
-		mClientSecret	= clientSecret;
-		mRedirectUri	= redirectUri;
-		mScope			= scope;
+		mClientId = clientId;
+		mClientSecret = clientSecret;
+		mRedirectUri = redirectUri;
+		mScope = scope;
 		
-		String authUrl	= LibConstants.AUTH_URL + "client_id=" + mClientId + "&redirect_uri=" + mRedirectUri + "&response_type=code"+"&scope="+mScope.toString();
+		String authUrl = LibConstants.AUTH_URL + "client_id=" + mClientId + "&redirect_uri=" + mRedirectUri + "&response_type=code"+"&scope="+mScope.toString();
 		
-		mSession		= new InstagramSession(context);
-		
+		mSession = new InstagramSession(context);
+
+		// Create dialog and callback result
 		mDialog 		= new InstagramDialog(context, authUrl, redirectUri, new InstagramDialog.InstagramDialogListener() {
 			
 			@Override
@@ -114,7 +117,7 @@ public class Instagram {
 
 	public class AccessTokenTask extends AsyncTask<URL, Integer, Long> {		
 		ProgressDialog progressDlg;
-		InstagramUser user;
+		UserInfo user;
 		String code;
 		
 		public AccessTokenTask(String code) {
@@ -137,30 +140,35 @@ public class Instagram {
             long result = 0;
             
             try {
-    			List<NameValuePair> params = new ArrayList<NameValuePair>(5);
-    			
-    			params.add(new BasicNameValuePair("client_id", 		mClientId));
-    			params.add(new BasicNameValuePair("client_secret",  mClientSecret));
-    			params.add(new BasicNameValuePair("grant_type", 	"authorization_code"));
-    			params.add(new BasicNameValuePair("redirect_uri", 	mRedirectUri));
-    			params.add(new BasicNameValuePair("code", 			code));
-    			
-    			InstagramRequest request	= new InstagramRequest();
-    			String response				= request.post(LibConstants.ACCESS_TOKEN_URL, params);
-    			
-    			if (!response.equals("")) {
-    				JSONObject jsonObj 	= (JSONObject) new JSONTokener(response).nextValue(); 		        
-    				JSONObject jsonUser	= jsonObj.getJSONObject("user");
-    				
-    				user				= new InstagramUser();
-    				
-    				user.accessToken	= jsonObj.getString("access_token");
-    				
-    				user.id				= jsonUser.getString("id");
-    				user.username		= jsonUser.getString("username");
-    				user.fullName		= jsonUser.getString("full_name");
-    				user.profilPicture	= jsonUser.getString("profile_picture");
-    			}    		            
+
+				Retrofit retrofit = new Retrofit.Builder()
+						.baseUrl("https://api.instagram.com/")
+						.addConverterFactory(GsonConverterFactory.create())
+						.build();
+
+				AuthenticationService authenticationService = retrofit.create(AuthenticationService.class);
+
+				Map<String, String> options = new HashMap<String, String>();
+				options.put("client_id", mClientId);
+				options.put("client_secret", mClientSecret);
+				options.put("grant_type", "authorization_code");
+				options.put("redirect_uri", mRedirectUri);
+				options.put("code", code);
+
+				Call<UserInfo> user = authenticationService.getAccessToken(options);
+
+//    			List<NameValuePair> params = new ArrayList<NameValuePair>(5);
+//
+//    			params.add(new BasicNameValuePair("client_id", 		mClientId));
+//    			params.add(new BasicNameValuePair("client_secret",  mClientSecret));
+//    			params.add(new BasicNameValuePair("grant_type", 	"authorization_code"));
+//    			params.add(new BasicNameValuePair("redirect_uri", 	mRedirectUri));
+//    			params.add(new BasicNameValuePair("code", 			code));
+//
+//    			InstagramRequest request	= new InstagramRequest();
+//    			String response				= request.post(LibConstants.ACCESS_TOKEN_URL, params);
+//
+//				user = createObjectFromResponse(UserInfo.class, response);
     		} catch (Exception e) { 
     			e.printStackTrace();
     		}
@@ -176,7 +184,7 @@ public class Instagram {
         	
         	if (user != null) {
         		mSession.store(user);
-        		
+
         		mListener.onSuccess(user);
         	} else {
         		mListener.onError("Failed to get access token");
@@ -185,8 +193,21 @@ public class Instagram {
     }
 	
 	public interface InstagramAuthListener {
-		public abstract void onSuccess(InstagramUser user);
+		public abstract void onSuccess(UserInfo user);
 		public abstract void onError(String error);
 		public abstract void onCancel();
+	}
+
+	public <T> T createObjectFromResponse(Class<T> clazz, final String response) throws InstagramException {
+		Gson gson = new Gson();
+		T object;
+
+		try {
+			object = gson.fromJson(response, clazz);
+		} catch (Exception e) {
+			throw new InstagramException("Error parsing json to object type " + clazz.getName(), e);
+		}
+
+		return object;
 	}
 }
