@@ -21,6 +21,9 @@ import lib.ilkayaktas.instagram.Instagram;
 import lib.ilkayaktas.instagram.InstagramRequest;
 import lib.ilkayaktas.instagram.InstagramSession;
 import lib.ilkayaktas.instagram.InstagramUser;
+import lib.ilkayaktas.instagram.http.Verbs;
+import lib.ilkayaktas.instagram.model.api.Endpoints;
+import lib.ilkayaktas.instagram.model.api.Scope;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -56,7 +59,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
 	private void instagram() {
 
-		mInstagram  		= new Instagram(this, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI,"basic+public_content+comments+relationships+likes+follower_list");
+		mInstagram  		= new Instagram(this, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, Scope.ALL);
 		mInstagramSession	= mInstagram.getSession();
 
 		mInstagram.authorize(mAuthListener);
@@ -72,7 +75,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
 			InstagramRequest request = new InstagramRequest(user.accessToken);
 
-				request.createRequest("GET","/users/self/media/liked", null, new InstagramRequest.InstagramRequestListener(){
+				request.createRequest(Verbs.GET, Endpoints.USERS_SELF_LIKED_MEDIA, null, new InstagramRequest.InstagramRequestListener(){
 
 					@Override
 					public void onSuccess(String response) {

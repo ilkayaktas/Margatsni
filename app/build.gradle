@@ -29,6 +29,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile project(path: ':instagram')
 
     // Appcompat and Constraint Layout
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
@@ -57,5 +58,4 @@ dependencies {
     // Lovely Dialog
     compile "com.yarolegovich:lovely-dialog:$rootProject.lovelydialog"
 
-    compile project(path: ':instagram')
 }

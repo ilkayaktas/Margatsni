@@ -13,7 +13,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import lib.ilkayaktas.instagram.util.Cons;
+import lib.ilkayaktas.instagram.model.api.Scope;
+import lib.ilkayaktas.instagram.util.LibConstants;
 
 /**
  * Instragam main class.
@@ -31,7 +32,7 @@ public class Instagram {
 	private String mClientId;
 	private String mClientSecret;
 	private String mRedirectUri;
-	private String mScope;
+	private Scope mScope;
 	
 	/**
 	 * Instantiate new object of this class.
@@ -41,7 +42,7 @@ public class Instagram {
 	 * @param clientSecret Client secret
 	 * @param redirectUri Redirect uri
 	 */
-	public Instagram(Context context, String clientId, String clientSecret, String redirectUri, String scope) {
+	public Instagram(Context context, String clientId, String clientSecret, String redirectUri, Scope scope) {
 		mContext		= context;
 		
 		mClientId		= clientId;
@@ -49,7 +50,7 @@ public class Instagram {
 		mRedirectUri	= redirectUri;
 		mScope			= scope;
 		
-		String authUrl	= Cons.AUTH_URL + "client_id=" + mClientId + "&redirect_uri=" + mRedirectUri + "&response_type=code"+"&scope="+mScope;
+		String authUrl	= LibConstants.AUTH_URL + "client_id=" + mClientId + "&redirect_uri=" + mRedirectUri + "&response_type=code"+"&scope="+mScope.toString();
 		
 		mSession		= new InstagramSession(context);
 		
@@ -145,7 +146,7 @@ public class Instagram {
     			params.add(new BasicNameValuePair("code", 			code));
     			
     			InstagramRequest request	= new InstagramRequest();
-    			String response				= request.post(Cons.ACCESS_TOKEN_URL, params);
+    			String response				= request.post(LibConstants.ACCESS_TOKEN_URL, params);
     			
     			if (!response.equals("")) {
     				JSONObject jsonObj 	= (JSONObject) new JSONTokener(response).nextValue(); 		        

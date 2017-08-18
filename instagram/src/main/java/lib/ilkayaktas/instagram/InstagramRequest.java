@@ -1,27 +1,25 @@
 package lib.ilkayaktas.instagram;
 
-import java.io.InputStream;
-import java.net.URL;
-
-import java.util.ArrayList;
-import java.util.List;
+import android.os.AsyncTask;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
-
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
-
-import org.apache.http.NameValuePair;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 
-import android.os.AsyncTask;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
-import lib.ilkayaktas.instagram.util.Cons;
-import lib.ilkayaktas.instagram.util.Debug;
+import lib.ilkayaktas.instagram.http.Verbs;
+import lib.ilkayaktas.instagram.util.LibConstants;
+import lib.ilkayaktas.instagram.util.Log;
 import lib.ilkayaktas.instagram.util.StringUtil;
 
 /**
@@ -79,7 +77,7 @@ public class InstagramRequest {
 	 * @param listener Request listener
 	 * 
 	 */
-	public void createRequest(String method, String endpoint, List<NameValuePair> params, InstagramRequestListener listener) {
+	public void createRequest(Verbs method, String endpoint, List<NameValuePair> params, InstagramRequestListener listener) {
 		new RequestTask(method, endpoint, params, listener).execute();
 	}
 	
@@ -94,7 +92,7 @@ public class InstagramRequest {
 	 * @throws Exception If error occured.
 	 */
 	private String requestGet(String endpoint, List<NameValuePair> params) throws Exception {
-		String requestUri = Cons.API_BASE_URL + ((endpoint.indexOf("/") == 0) ? endpoint : "/" + endpoint);
+		String requestUri = LibConstants.API_BASE_URL + ((endpoint.indexOf("/") == 0) ? endpoint : "/" + endpoint);
 		
 		return get(requestUri, params);				
 	}
@@ -110,7 +108,7 @@ public class InstagramRequest {
 	 * @throws Exception If error occured.
 	 */
 	private String requestPost(String endpoint, List<NameValuePair> params) throws Exception {
-		String requestUri = Cons.API_BASE_URL + ((endpoint.indexOf("/") == 0) ? endpoint : "/" + endpoint);
+		String requestUri = LibConstants.API_BASE_URL + ((endpoint.indexOf("/") == 0) ? endpoint : "/" + endpoint);
 		
 		return post(requestUri, params);				
 	}
@@ -157,7 +155,7 @@ public class InstagramRequest {
 				requestUrl = requestUri + ((requestUri.contains("?")) ? "&" + requestParam : "?" + requestParam); 
  			}
 			
-			Debug.i("GET " + requestUrl);
+			Log.i("GET " + requestUrl);
 			
 			HttpClient httpClient 		= new DefaultHttpClient();		
 			HttpGet httpGet 			= new HttpGet(requestUrl);
@@ -172,7 +170,7 @@ public class InstagramRequest {
 			stream		= httpEntity.getContent();			
 			response	= StringUtil.streamToString(stream);
 			
-			Debug.i("Response " + response);
+			Log.i("Response " + response);
 			
 			if (httpResponse.getStatusLine().getStatusCode() != 200) {
 				throw new Exception(httpResponse.getStatusLine().getReasonPhrase());
@@ -191,7 +189,7 @@ public class InstagramRequest {
 	/**
 	 * Create http POST request to an instagram api endpoint. 
 	 * 
-	 * @param requestUri Api url
+	 * @param requestUrl Api url
 	 * @param params Request parameters
 	 * 	 
 	 * @return Api response in json format.
@@ -213,7 +211,7 @@ public class InstagramRequest {
 				}
 			}
 			
-			Debug.i("POST " + requestUrl);
+			Log.i("POST " + requestUrl);
 			
 			HttpClient httpClient 	= new DefaultHttpClient();
 			HttpPost httpPost 		= new HttpPost(requestUrl);
@@ -230,7 +228,7 @@ public class InstagramRequest {
 			stream		= httpEntity.getContent();			
 			response	= StringUtil.streamToString(stream);
 			
-			Debug.i("Response " + response);
+			Log.i("Response " + response);
 			
 			if (httpResponse.getStatusLine().getStatusCode() != 200) {
 				throw new Exception(httpResponse.getStatusLine().getReasonPhrase());
@@ -243,13 +241,14 @@ public class InstagramRequest {
 	}
 	
 	private class RequestTask extends AsyncTask<URL, Integer, Long> {
-		String method, endpoint, response = "";
+		String endpoint, response = "";
+		Verbs method;
 		
 		List<NameValuePair> params;
 		
 		InstagramRequestListener listener;
 		
-		public RequestTask(String method, String endpoint,  List<NameValuePair> params, InstagramRequestListener listener) {
+		public RequestTask(Verbs method, String endpoint,  List<NameValuePair> params, InstagramRequestListener listener) {
 			this.method		= method;
 			this.endpoint	= endpoint;
 			this.params		= params;
@@ -266,7 +265,7 @@ public class InstagramRequest {
             long result = 0;
             
             try {
-            	if (method.equals("POST")) {
+            	if (method.equals(Verbs.POST)) {
         			response = requestPost(endpoint, params); 
         		} else {
         			response = requestGet(endpoint, params);

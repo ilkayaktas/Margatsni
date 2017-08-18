@@ -6,7 +6,7 @@ package lib.ilkayaktas.instagram.util;
  * @author Lorensius W. L. T <lorenz@londatiga.net>
  *
  */
-public class Cons {
+public class LibConstants {
 	public static final String TAG = "AndroidInstagram";
 	
 	public static final String AUTH_URL = "https://api.instagram.com/oauth/authorize/?";
