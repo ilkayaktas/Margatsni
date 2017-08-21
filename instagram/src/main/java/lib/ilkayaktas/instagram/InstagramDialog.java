@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,6 +19,9 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 /**
  * Authentication and authorization dialog.
@@ -45,9 +49,9 @@ public class InstagramDialog extends Dialog {
 	public InstagramDialog(Context context, String authUrl, String redirectUri, InstagramDialogListener listener) {
 		super(context);
 		
-		mAuthUrl		= authUrl;
-		mListener		= listener;
-		mRedirectUri	= redirectUri;
+		mAuthUrl = authUrl;
+		mListener = listener;
+		mRedirectUri = redirectUri;
 	}
 	
 	@Override
@@ -60,18 +64,16 @@ public class InstagramDialog extends Dialog {
 		mSpinner.setMessage("Loading...");
 
 		mContent = new LinearLayout(getContext());
-	        
 		mContent.setOrientation(LinearLayout.VERTICAL);
 	        
 		setUpTitle();
-		
 		setUpWebView();
 	        
-		Display display 	= getWindow().getWindowManager().getDefaultDisplay();
-		Point outSize		= new Point();
+		Display display = getWindow().getWindowManager().getDefaultDisplay();
+		Point outSize = new Point();
 		
-		int width			= 0;
-		int height			= 0;
+		int width = 0;
+		int height = 0;
 		
 		double[] dimensions = new double[2];
 		        
@@ -144,21 +146,21 @@ public class InstagramDialog extends Dialog {
 			Log.d(TAG, "Redirecting URL " + url);
 	        	
 			if (url.startsWith(mRedirectUri)) {
-				if (url.contains("code")) {
-					String temp[] = url.split("=");
-					
-					mListener.onSuccess(temp[1]);
-				} else if (url.contains("error")) {
-					String temp[] = url.split("=");
-					
-					mListener.onError(temp[temp.length-1]);
+
+				Uri uri = Uri.parse(url);
+				String code= null;
+				try {
+					code = URLDecoder.decode(uri.getQueryParameter("code"), "UTF-8");
+					mListener.onSuccess(code);
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
 				}
-	        		
+
 	        	InstagramDialog.this.dismiss();
 	        		
 	        	return true;
 			}
-			
+
 			return false;
 		}
 
@@ -191,8 +193,8 @@ public class InstagramDialog extends Dialog {
 	}
 	
 	public interface InstagramDialogListener {
-		public abstract void onSuccess(String code);
-		public abstract void onCancel();
-		public abstract void onError(String error);
+		void onSuccess(String code);
+		void onCancel();
+		void onError(String error);
 	}
 }

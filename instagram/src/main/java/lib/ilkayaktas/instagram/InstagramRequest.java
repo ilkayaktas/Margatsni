@@ -19,9 +19,15 @@ import java.util.List;
 
 import lib.ilkayaktas.instagram.exceptions.InstagramException;
 import lib.ilkayaktas.instagram.http.Verbs;
+import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
 import lib.ilkayaktas.instagram.util.LibConstants;
 import lib.ilkayaktas.instagram.util.Log;
 import lib.ilkayaktas.instagram.util.StringUtil;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Http request to instagram api.
@@ -31,12 +37,15 @@ import lib.ilkayaktas.instagram.util.StringUtil;
  */
 public class InstagramRequest {
 	private String mAccessToken;
-	
+	private Retrofit retrofit;
+	private InstagramQuery query;
+
 	/**
 	 * Instantiate new object.
 	 */
 	public InstagramRequest() {
 		mAccessToken = "";
+		createRetro();
 	}
 	
 	/**
@@ -46,8 +55,36 @@ public class InstagramRequest {
 	 */
 	public InstagramRequest(String accessToken) {
 		mAccessToken = accessToken;
+		createRetro();
 	}
-	
+
+	private void createRetro(){
+		retrofit = new Retrofit.Builder()
+				.baseUrl("https://api.instagram.com/v1/")
+				.addConverterFactory(GsonConverterFactory.create())
+				.build();
+
+		query = retrofit.create(InstagramQuery.class);
+	}
+
+	public Call<UserInfo> getUser(){
+		Call<UserInfo> usr =  query.getCurrentUser(mAccessToken);
+			usr.enqueue(new Callback<UserInfo>() {
+				@Override
+				public void onResponse(Call<UserInfo> call, Response<UserInfo> response) {
+					System.out.println();
+				}
+
+				@Override
+				public void onFailure(Call<UserInfo> call, Throwable t) {
+					System.out.println();
+				}
+			});
+
+
+		return null;
+	}
+
 	/**
 	 * Create http request to an instagram api endpoint. 
 	 * This is a synchronus method, so you have to call it on a separate thread.

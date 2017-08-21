@@ -6,17 +6,17 @@ import android.os.AsyncTask;
 
 import com.google.gson.Gson;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.message.BasicNameValuePair;
+
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 import lib.ilkayaktas.instagram.exceptions.InstagramException;
 import lib.ilkayaktas.instagram.model.api.Scope;
 import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
 import lib.ilkayaktas.instagram.util.LibConstants;
-import retrofit2.Call;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Instragam main class.
@@ -141,34 +141,18 @@ public class Instagram{
             
             try {
 
-				Retrofit retrofit = new Retrofit.Builder()
-						.baseUrl("https://api.instagram.com/")
-						.addConverterFactory(GsonConverterFactory.create())
-						.build();
+    			List<NameValuePair> params = new ArrayList<NameValuePair>(5);
 
-				AuthenticationService authenticationService = retrofit.create(AuthenticationService.class);
+    			params.add(new BasicNameValuePair("client_id", 		mClientId));
+    			params.add(new BasicNameValuePair("client_secret",  mClientSecret));
+    			params.add(new BasicNameValuePair("grant_type", 	"authorization_code"));
+    			params.add(new BasicNameValuePair("redirect_uri", 	mRedirectUri));
+    			params.add(new BasicNameValuePair("code", 			code));
 
-				Map<String, String> options = new HashMap<String, String>();
-				options.put("client_id", mClientId);
-				options.put("client_secret", mClientSecret);
-				options.put("grant_type", "authorization_code");
-				options.put("redirect_uri", mRedirectUri);
-				options.put("code", code);
+    			InstagramRequest request = new InstagramRequest();
+    			String response = request.post(LibConstants.ACCESS_TOKEN_URL, params);
 
-				Call<UserInfo> user = authenticationService.getAccessToken(options);
-
-//    			List<NameValuePair> params = new ArrayList<NameValuePair>(5);
-//
-//    			params.add(new BasicNameValuePair("client_id", 		mClientId));
-//    			params.add(new BasicNameValuePair("client_secret",  mClientSecret));
-//    			params.add(new BasicNameValuePair("grant_type", 	"authorization_code"));
-//    			params.add(new BasicNameValuePair("redirect_uri", 	mRedirectUri));
-//    			params.add(new BasicNameValuePair("code", 			code));
-//
-//    			InstagramRequest request	= new InstagramRequest();
-//    			String response				= request.post(LibConstants.ACCESS_TOKEN_URL, params);
-//
-//				user = createObjectFromResponse(UserInfo.class, response);
+				user = createObjectFromResponse(UserInfo.class, response);
     		} catch (Exception e) { 
     			e.printStackTrace();
     		}
@@ -193,9 +177,9 @@ public class Instagram{
     }
 	
 	public interface InstagramAuthListener {
-		public abstract void onSuccess(UserInfo user);
-		public abstract void onError(String error);
-		public abstract void onCancel();
+		void onSuccess(UserInfo user);
+		void onError(String error);
+		void onCancel();
 	}
 
 	public <T> T createObjectFromResponse(Class<T> clazz, final String response) throws InstagramException {
