@@ -2,7 +2,6 @@ package lib.ilkayaktas.instagram;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
@@ -23,6 +22,8 @@ import android.widget.TextView;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
+import lib.ilkayaktas.instagram.util.LibConstants;
+
 /**
  * Authentication and authorization dialog.
  * 
@@ -31,37 +32,33 @@ import java.net.URLDecoder;
  */
 @SuppressLint({ "NewApi", "SetJavaScriptEnabled" })
 public class InstagramDialog extends Dialog {
-	private ProgressDialog mSpinner;
+//	private ProgressDialog mSpinner;
 	private WebView mWebView;
 	private LinearLayout mContent;
 	private TextView mTitle;
 	
 	private String mAuthUrl;
-	private String mRedirectUri;
-	
-	private InstagramDialogListener mListener;
-	
+
+
 	static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 			ViewGroup.LayoutParams.MATCH_PARENT);
 	
 	static final String TAG = "Instagram-Android";
 	
-	public InstagramDialog(Context context, String authUrl, String redirectUri, InstagramDialogListener listener) {
+	public InstagramDialog(Context context, String authUrl) {
 		super(context);
 		
 		mAuthUrl = authUrl;
-		mListener = listener;
-		mRedirectUri = redirectUri;
 	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		mSpinner = new ProgressDialog(getContext());
-	        
-		mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		mSpinner.setMessage("Loading...");
+//		mSpinner = new ProgressDialog(getContext());
+//
+//		mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//		mSpinner.setMessage("Loading...");
 
 		mContent = new LinearLayout(getContext());
 		mContent.setOrientation(LinearLayout.VERTICAL);
@@ -136,8 +133,7 @@ public class InstagramDialog extends Dialog {
 	@Override
 	public void onBackPressed() {
 		super.onBackPressed();
-		mListener.onCancel();
-		
+
 	}
 	private class InstagramWebViewClient extends WebViewClient {
 
@@ -145,13 +141,18 @@ public class InstagramDialog extends Dialog {
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			Log.d(TAG, "Redirecting URL " + url);
 	        	
-			if (url.startsWith(mRedirectUri)) {
+			if (url.startsWith(LibConstants.INSTAGRAM_CALBACK_URL)) {
 
 				Uri uri = Uri.parse(url);
 				String code= null;
 				try {
 					code = URLDecoder.decode(uri.getQueryParameter("code"), "UTF-8");
-					mListener.onSuccess(code);
+
+					InstagramRequest request = new InstagramRequest(getContext());
+
+					request.authenticate(LibConstants.INSTAGRAM_CLIENT_ID, LibConstants.INSTAGRAM_CLIENT_SECRET, LibConstants.INSTAGRAM_CALBACK_URL, code);
+
+					System.out.println();
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -167,9 +168,7 @@ public class InstagramDialog extends Dialog {
 		@Override
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {	
 			super.onReceivedError(view, errorCode, description, failingUrl);
-	      
-			mListener.onError(description);
-	            
+
 			InstagramDialog.this.dismiss();
 			
 			Log.d(TAG, "Page error: " + description);
@@ -179,7 +178,7 @@ public class InstagramDialog extends Dialog {
 		public void onPageStarted(WebView view, String url, Bitmap favicon) {
 			super.onPageStarted(view, url, favicon);
 			
-			mSpinner.show();
+//			mSpinner.show();
 			
 			Log.d(TAG, "Loading URL: " + url);
 		}
@@ -188,13 +187,10 @@ public class InstagramDialog extends Dialog {
 		public void onPageFinished(WebView view, String url) {
 			super.onPageFinished(view, url);
 			
-			mSpinner.dismiss();
+//			mSpinner.dismiss();
+
+			Log.d(TAG, "Finished: " + url);
 		}
 	}
 	
-	public interface InstagramDialogListener {
-		void onSuccess(String code);
-		void onCancel();
-		void onError(String error);
-	}
 }

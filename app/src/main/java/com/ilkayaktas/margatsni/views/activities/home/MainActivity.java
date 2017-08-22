@@ -6,10 +6,8 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.widget.GridView;
 import android.widget.ProgressBar;
-import android.widget.Toast;
 
 import com.ilkayaktas.margatsni.R;
-import com.ilkayaktas.margatsni.utils.AppConstants;
 import com.ilkayaktas.margatsni.views.activities.base.BaseActivity;
 import com.ilkayaktas.margatsni.views.widgets.dialogs.rateme.Config;
 import com.ilkayaktas.margatsni.views.widgets.dialogs.rateme.RateMe;
@@ -18,11 +16,8 @@ import javax.inject.Inject;
 
 import butterknife.ButterKnife;
 import lib.ilkayaktas.instagram.Instagram;
-import lib.ilkayaktas.instagram.InstagramRequest;
 import lib.ilkayaktas.instagram.InstagramSession;
 import lib.ilkayaktas.instagram.model.api.Scope;
-import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
-import retrofit2.Call;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
@@ -31,10 +26,6 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
 	private ProgressBar mLoadingPb;
 	private GridView mGridView;
-
-	private static final String CLIENT_ID = AppConstants.INSTAGRAM_CLIENT_ID;
-	private static final String CLIENT_SECRET = AppConstants.INSTAGRAM_CLIENT_SECRET;
-	private static final String REDIRECT_URI = AppConstants.INSTAGRAM_CALBACK_URL;
 
 	@Inject
 	MainMvpPresenter<MainMvpView> mPresenter;
@@ -58,37 +49,12 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 
 	private void instagram() {
 
-		mInstagram  		= new Instagram(this, CLIENT_ID, CLIENT_SECRET, REDIRECT_URI, Scope.ALL);
+		mInstagram  		= new Instagram(this, Scope.ALL);
 		mInstagramSession	= mInstagram.getSession();
 
-		mInstagram.authorize(mAuthListener);
+		mInstagram.authorize();
 
 	}
-
-
-	private Instagram.InstagramAuthListener mAuthListener = new Instagram.InstagramAuthListener() {
-		@Override
-		public void onSuccess(UserInfo user) {
-			finish();
-			Toast.makeText(MainActivity.this, user.accessToken, Toast.LENGTH_SHORT).show();
-
-			InstagramRequest request = new InstagramRequest(user.accessToken);
-
-				request.getUser();
-
-			mInstagram.resetSession();
-		}
-
-		@Override
-		public void onError(String error) {
-			Toast.makeText(MainActivity.this, "Error! "+error, Toast.LENGTH_SHORT).show();
-		}
-
-		@Override
-		public void onCancel() {
-			Toast.makeText(MainActivity.this, "Cancelled!", Toast.LENGTH_SHORT).show();
-		}
-	};
 
 	@Override
 	protected void onStart() {

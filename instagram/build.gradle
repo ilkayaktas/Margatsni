@@ -28,4 +28,7 @@ dependencies{
     compile 'com.squareup.retrofit2:retrofit:2.3.0'
     compile group: 'com.squareup.retrofit2', name: 'converter-gson', version: '2.3.0'
 
+    // RXJava Retrofit adapter
+    compile 'com.jakewharton.retrofit:retrofit2-rxjava2-adapter:1.0.0'
+
 }
