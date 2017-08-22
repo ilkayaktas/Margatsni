@@ -107,6 +107,13 @@ public class InstagramRequest {
 
     public UserInfo authenticate(String client_id, String client_secret, String redirect_uri, String code) {
         Observable<UserInfo> auth = queryAuth.authenticate(client_id, client_secret, "authorization_code", redirect_uri, code);
+    
+//        auth.subscribeOn(Schedulers.io())
+//                .observeOn(AndroidSchedulers.mainThread())
+//                .doOnSubscribe(this::onSubscribeAuthentication)
+//                .doOnNext(this::onNextAuthentication)
+//                .doOnError(this::onErrorAuthentication)
+//                .doOnComplete(this::onCompletedAuthentication);
 
         auth.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -147,5 +154,34 @@ public class InstagramRequest {
 
         return null;
     }
-
+    
+    private void onCompletedAuthentication() {
+        progressDlg.dismiss();
+        System.out.println("________1_");
+    }
+    
+    private void onErrorAuthentication(Throwable throwable) {
+        System.out.println("_________");
+        progressDlg.cancel();
+    }
+    
+    private void onNextAuthentication(UserInfo userInfo) {
+        System.out.println(userInfo.toString());
+        createRetroApi();
+    
+        Toast.makeText(mContext, userInfo.accessToken, Toast.LENGTH_SHORT).show();
+    
+        mAccessToken = userInfo.accessToken;
+    
+        getUser();
+        
+    }
+    
+    private void onSubscribeAuthentication(Disposable disposable) {
+        System.out.println("_______ss__");
+        progressDlg.setMessage("Getting access token...");
+        progressDlg.show();
+    
+    }
+    
 }
