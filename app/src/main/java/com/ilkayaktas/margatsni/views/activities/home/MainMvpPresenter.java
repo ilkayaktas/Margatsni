@@ -8,4 +8,7 @@ import com.ilkayaktas.margatsni.views.activities.base.MvpPresenter;
  */
 
 public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V> {
+	void authenticateInstagram();
+	
+	void getCurrentUser();
 }

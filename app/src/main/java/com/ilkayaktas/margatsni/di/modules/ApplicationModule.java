@@ -101,8 +101,8 @@ public class ApplicationModule {
 	
 	@Provides
 	@Singleton
-	IApiHelper provideApiHelper() {
-		return new ApiHelper();
+	IApiHelper provideApiHelper(AuthenticationService authenticationService, UserService userService) {
+		return new ApiHelper(authenticationService, userService);
 	}
 
 	@Provides

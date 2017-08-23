@@ -3,6 +3,8 @@ package com.ilkayaktas.margatsni.controller;
 import android.content.Context;
 
 import com.ilkayaktas.margatsni.controller.api.IApiHelper;
+import com.ilkayaktas.margatsni.controller.api.instagram.InstagramDialog;
+import com.ilkayaktas.margatsni.controller.api.instagram.model.api.Scope;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
 import com.ilkayaktas.margatsni.controller.db.IDbHelper;
 import com.ilkayaktas.margatsni.controller.pref.IPreferenceHelper;
@@ -45,8 +47,8 @@ public class DataManager implements IDataManager {
 	}
 
 	@Override
-	public Single<UserInfo> authenticate() {
-		return mIApiHelper.authenticate();
+	public void authenticate(Context context, Scope scope, InstagramDialog.OnInstagramAuthentication onInstagramAuthentication) {
+		mIApiHelper.authenticate(context, scope, onInstagramAuthentication);
 	}
 
 	@Override

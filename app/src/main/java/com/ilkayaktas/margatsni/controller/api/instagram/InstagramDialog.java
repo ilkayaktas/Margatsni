@@ -17,12 +17,15 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.ilkayaktas.margatsni.controller.api.instagram.http.retrofit.AuthenticationService;
+import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
 import com.ilkayaktas.margatsni.controller.api.instagram.util.LibConstants;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+
+import io.reactivex.Single;
 
 
 /**
@@ -33,12 +36,11 @@ import java.net.URLDecoder;
  */
 @SuppressLint({ "NewApi", "SetJavaScriptEnabled" })
 public class InstagramDialog extends Dialog {
-//	private ProgressDialog mSpinner;
 	private WebView mWebView;
 	private LinearLayout mContent;
-	private TextView mTitle;
-	
 	private String mAuthUrl;
+	private AuthenticationService authenticationService;
+	private OnInstagramAuthentication onInstagramAuthentication;
 
 
 	static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -46,20 +48,16 @@ public class InstagramDialog extends Dialog {
 	
 	static final String TAG = "Instagram-Android";
 	
-	public InstagramDialog(Context context, String authUrl) {
+	public InstagramDialog(Context context, String authUrl, AuthenticationService authenticationService, OnInstagramAuthentication onInstagramAuthentication) {
 		super(context);
-		
+		this.authenticationService = authenticationService;
+		this.onInstagramAuthentication = onInstagramAuthentication;
 		mAuthUrl = authUrl;
 	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
-//		mSpinner = new ProgressDialog(getContext());
-//
-//		mSpinner.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//		mSpinner.setMessage("Loading...");
 
 		mContent = new LinearLayout(getContext());
 		mContent.setOrientation(LinearLayout.VERTICAL);
@@ -136,6 +134,7 @@ public class InstagramDialog extends Dialog {
 		super.onBackPressed();
 
 	}
+	
 	private class InstagramWebViewClient extends WebViewClient {
 
 		@Override
@@ -148,12 +147,13 @@ public class InstagramDialog extends Dialog {
 				String code= null;
 				try {
 					code = URLDecoder.decode(uri.getQueryParameter("code"), "UTF-8");
+					
+					Single<UserInfo> user = authenticationService.authenticate(LibConstants.INSTAGRAM_CLIENT_ID,
+							LibConstants.INSTAGRAM_CLIENT_SECRET, "authorization_code",
+							LibConstants.INSTAGRAM_CALBACK_URL, code);
+					
+					onInstagramAuthentication.onSucces(user);
 
-					InstagramRequest request = new InstagramRequest(getContext());
-
-					request.authenticate(LibConstants.INSTAGRAM_CLIENT_ID, LibConstants.INSTAGRAM_CLIENT_SECRET, LibConstants.INSTAGRAM_CALBACK_URL, code);
-
-					System.out.println();
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
 				}
@@ -190,4 +190,7 @@ public class InstagramDialog extends Dialog {
 		}
 	}
 	
+	public interface OnInstagramAuthentication{
+		void onSucces(Single<UserInfo> user);
+	}
 }

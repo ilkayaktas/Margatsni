@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 
 import com.ilkayaktas.margatsni.R;
-import com.ilkayaktas.margatsni.controller.api.instagram.Instagram;
-import com.ilkayaktas.margatsni.controller.api.instagram.model.api.Scope;
 import com.ilkayaktas.margatsni.views.activities.base.BaseActivity;
 import com.ilkayaktas.margatsni.views.widgets.dialogs.rateme.Config;
 import com.ilkayaktas.margatsni.views.widgets.dialogs.rateme.RateMe;
@@ -17,8 +15,6 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
-
-	private Instagram mInstagram;
 
 	@Inject
 	MainMvpPresenter<MainMvpView> mPresenter;
@@ -37,14 +33,7 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 		// Attach presenter
 		mPresenter.onAttach(MainActivity.this);
 
-		instagram();
-	}
-
-	private void instagram() {
-
-		mInstagram = new Instagram(this, Scope.ALL);
-		mInstagram.authorize();
-
+		mPresenter.authenticateInstagram();
 	}
 
 	@Override

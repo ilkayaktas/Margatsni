@@ -1,5 +1,8 @@
 package com.ilkayaktas.margatsni.controller.api.instagram;
 
+import android.content.Context;
+
+import com.ilkayaktas.margatsni.controller.api.instagram.model.api.Scope;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
 
 import io.reactivex.Single;
@@ -9,7 +12,7 @@ import io.reactivex.Single;
  */
 
 public interface InstagramApi {
-    Single<UserInfo> authenticate();
+    void authenticate(Context context, Scope scope, InstagramDialog.OnInstagramAuthentication onInstagramAuthentication);
     Single<UserInfo> getCurrentUser();
     Single<UserInfo> getUser(String userId);
 }
