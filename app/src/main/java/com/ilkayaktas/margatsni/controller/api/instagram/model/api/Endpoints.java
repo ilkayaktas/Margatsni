@@ -1,4 +1,4 @@
-package lib.ilkayaktas.instagram.model.api;
+package com.ilkayaktas.margatsni.controller.api.instagram.model.api;
 
 public final class Endpoints {
 

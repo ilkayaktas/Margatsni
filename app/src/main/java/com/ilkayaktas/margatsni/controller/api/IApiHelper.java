@@ -16,13 +16,11 @@
 package com.ilkayaktas.margatsni.controller.api;
 
 
-import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
+import com.ilkayaktas.margatsni.controller.api.instagram.InstagramApi;
 
 /**
  * Created by ilkay on 01/07/2017.
  */
 
-public interface IApiHelper {
-    UserInfo autorize();
-    UserInfo getCurrentUser();
+public interface IApiHelper extends InstagramApi{
 }

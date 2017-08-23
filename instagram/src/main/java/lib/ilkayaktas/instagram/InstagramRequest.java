@@ -12,6 +12,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import lib.ilkayaktas.instagram.http.retrofit.*;
 import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -26,8 +27,8 @@ public class InstagramRequest {
     private String mAccessToken;
     private Retrofit retrofitApi;
     private Retrofit retrofitAuth;
-    private InstagramQuery queryApi;
-    private InstagramQuery queryAuth;
+    private UserService queryApi;
+    private AuthenticationService queryAuth;
     private Context mContext;
     private ProgressDialog progressDlg;
 
@@ -60,7 +61,7 @@ public class InstagramRequest {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        queryAuth = retrofitAuth.create(InstagramQuery.class);
+        queryAuth = retrofitAuth.create(AuthenticationService.class);
     }
 
     private void createRetroApi() {
@@ -70,7 +71,7 @@ public class InstagramRequest {
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build();
 
-        queryApi = retrofitApi.create(InstagramQuery.class);
+        queryApi = retrofitApi.create(UserService.class);
     }
 
     public Call<UserInfo> getUser() {

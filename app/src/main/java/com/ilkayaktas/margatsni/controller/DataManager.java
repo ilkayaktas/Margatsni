@@ -3,6 +3,7 @@ package com.ilkayaktas.margatsni.controller;
 import android.content.Context;
 
 import com.ilkayaktas.margatsni.controller.api.IApiHelper;
+import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
 import com.ilkayaktas.margatsni.controller.db.IDbHelper;
 import com.ilkayaktas.margatsni.controller.pref.IPreferenceHelper;
 import com.ilkayaktas.margatsni.di.annotations.ApplicationContext;
@@ -10,7 +11,7 @@ import com.ilkayaktas.margatsni.di.annotations.ApplicationContext;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
-import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
+import io.reactivex.Single;
 
 
 /**
@@ -44,12 +45,17 @@ public class DataManager implements IDataManager {
 	}
 
 	@Override
-	public UserInfo autorize() {
-		return null;
+	public Single<UserInfo> authenticate() {
+		return mIApiHelper.authenticate();
 	}
 
 	@Override
-	public UserInfo getCurrentUser() {
-		return null;
+	public Single<UserInfo> getCurrentUser() {
+		return mIApiHelper.getCurrentUser();
+	}
+
+	@Override
+	public Single<UserInfo> getUser(String userId) {
+		return mIApiHelper.getUser(userId);
 	}
 }

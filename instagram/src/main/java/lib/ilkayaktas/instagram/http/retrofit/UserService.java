@@ -1,9 +1,11 @@
 package lib.ilkayaktas.instagram.http.retrofit;
 
+import io.reactivex.Observable;
 import lib.ilkayaktas.instagram.model.api.Endpoints;
 import lib.ilkayaktas.instagram.model.entity.users.basicinfo.UserInfo;
-import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Path;
+import retrofit2.http.Query;
 
 /**
  * Created by iaktas on 18.08.2017.
@@ -11,15 +13,15 @@ import retrofit2.http.GET;
 
 public interface UserService {
     @GET(Endpoints.USERS_SELF)
-    Call<UserInfo> getCurrentUser();
+    Observable<UserInfo> getCurrentUser(@Query("access_token") String access_token);
 
     @GET(Endpoints.USERS_WITH_ID)
-    Call<UserInfo> getCurrentUSer1();
+    Observable<UserInfo> getUser(@Path("userId") String user, @Query("access_token") String access_token);
 
     @GET(Endpoints.USERS_SELF_RECENT_MEDIA)
-    Call<UserInfo> getCurrentUSer2();
+    Observable<UserInfo> getCurrentUserRecentMedia(@Query("access_token") String access_token);
 
     @GET(Endpoints.USERS_RECENT_MEDIA)
-    Call<UserInfo> getCurrentUSer3();
+    Observable<UserInfo> getUserRecentMedia(@Path("userId") String user, @Query("access_token") String access_token);
 
 }
