@@ -42,6 +42,24 @@ public final class AppConstants {
     
     public static final int REPORT_RECORD_HISTORY_COUNT = 10;
 
+    public static final String AUTH_URL = "https://api.instagram.com/oauth/authorize/?";
+
+    public static final String ACCESS_TOKEN_URL = "https://api.instagram.com/oauth/access_token";
+
+    public static final String API_BASE_URL = "https://api.instagram.com/v1";
+
+    public static final String INSTAGRAM_CLIENT_ID = "82d5b817e82e41c39352649e29fd864e";
+
+    public static final String INSTAGRAM_CLIENT_SECRET = "d570e68a21f544298256a2fb804739b1";
+
+    public static final String INSTAGRAM_CALBACK_URL = "http://www.ilkayaktas.com";
+
+    public static final String FIVEHUNDREDPX_CUSTOMER_KEY = "RI5BBGQqLPWkVckVYPbUKSr53Rd0yEQ4lFmLEu1e";
+
+    public static final String FIVEHUNDREDPX_CUSTOMER_SECRET = "kMkLTphXzai5TvDf6LG5pSTRwlxLgE40IjMv9kZb";
+
+    public static final String FIVEHUNDREDPX_CALBACK_URL = "http://www.ilkayaktas.com";
+
     private AppConstants() {
         // This utility class is not publicly instantiable
     }

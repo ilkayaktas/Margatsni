@@ -47,7 +47,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
 	
 	private void onSuccessAuthentication(UserInfo userInfo) {
 		System.out.println("presenter received: "+userInfo.user.toString());
-		
+		getMvpView().drawUserData(userInfo);
 	}
 	
 	private void onSuccessUser(UserInfo userInfo) {

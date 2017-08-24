@@ -18,9 +18,9 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.ilkayaktas.margatsni.controller.api.instagram.http.retrofit.AuthenticationService;
+import com.ilkayaktas.margatsni.controller.api.instagram.http.AuthenticationService;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
-import com.ilkayaktas.margatsni.controller.api.instagram.util.LibConstants;
+import com.ilkayaktas.margatsni.utils.AppConstants;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
@@ -141,16 +141,16 @@ public class InstagramDialog extends Dialog {
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			Log.d(TAG, "Redirecting URL " + url);
 	        	
-			if (url.startsWith(LibConstants.INSTAGRAM_CALBACK_URL)) {
+			if (url.startsWith(AppConstants.INSTAGRAM_CALBACK_URL)) {
 
 				Uri uri = Uri.parse(url);
 				String code= null;
 				try {
 					code = URLDecoder.decode(uri.getQueryParameter("code"), "UTF-8");
 					
-					Single<UserInfo> user = authenticationService.authenticate(LibConstants.INSTAGRAM_CLIENT_ID,
-							LibConstants.INSTAGRAM_CLIENT_SECRET, "authorization_code",
-							LibConstants.INSTAGRAM_CALBACK_URL, code);
+					Single<UserInfo> user = authenticationService.authenticate(AppConstants.INSTAGRAM_CLIENT_ID,
+							AppConstants.INSTAGRAM_CLIENT_SECRET, "authorization_code",
+							AppConstants.INSTAGRAM_CALBACK_URL, code);
 					
 					onInstagramAuthentication.onSucces(user);
 

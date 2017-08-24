@@ -4,21 +4,27 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.ilkayaktas.margatsni.R;
+import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
 import com.ilkayaktas.margatsni.views.activities.base.BaseActivity;
 import com.ilkayaktas.margatsni.views.widgets.dialogs.rateme.Config;
 import com.ilkayaktas.margatsni.views.widgets.dialogs.rateme.RateMe;
 
 import javax.inject.Inject;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity implements MainMvpView {
 
 	@Inject
 	MainMvpPresenter<MainMvpView> mPresenter;
-	
+
+	@BindView(R.id.imageView) ImageView imageView;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -69,5 +75,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 		} else {
 			return super.onKeyDown(keyCode, event);
 		}
+	}
+
+	@Override
+	public void drawUserData(UserInfo userInfo) {
+		Glide.with(this).load(userInfo.user.profilePicture).into(imageView);
 	}
 }

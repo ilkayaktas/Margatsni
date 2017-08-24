@@ -1,4 +1,4 @@
-package com.ilkayaktas.margatsni.controller.api.instagram.http.retrofit;
+package com.ilkayaktas.margatsni.controller.api.instagram.http;
 
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
 
