@@ -13,4 +13,9 @@ public class RequestToken {
 
     @SerializedName("oauth_token_secret")
     public String oauth_token_secret;
+
+    @Override
+    public String toString() {
+        return String.format("RequestToken [oauth_token=%s, oauth_token_secret=%s]", oauth_token, oauth_token_secret);
+    }
 }

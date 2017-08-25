@@ -14,4 +14,8 @@ public class Authorize {
     @SerializedName("oauth_verifier ")
     public String oauth_verifier ;
 
+    @Override
+    public String toString() {
+        return String.format("Authorize [oauth_token=%s, oauth_verifier=%s]", oauth_token, oauth_verifier);
+    }
 }

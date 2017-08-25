@@ -3,6 +3,7 @@ package com.ilkayaktas.margatsni.controller;
 import android.content.Context;
 
 import com.ilkayaktas.margatsni.controller.api.IApiHelper;
+import com.ilkayaktas.margatsni.controller.api.fivehundredpx.model.entity.RequestToken;
 import com.ilkayaktas.margatsni.controller.api.instagram.InstagramDialog;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.api.Scope;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
@@ -59,5 +60,10 @@ public class DataManager implements IDataManager {
 	@Override
 	public Single<UserInfo> getUser(String userId) {
 		return mIApiHelper.getUser(userId);
+	}
+
+	@Override
+	public Single<RequestToken> requestToken(Context context, String oauth_callback) {
+		return mIApiHelper.requestToken(context, oauth_callback);
 	}
 }

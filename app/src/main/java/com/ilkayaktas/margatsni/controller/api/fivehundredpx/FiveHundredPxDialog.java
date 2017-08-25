@@ -1,4 +1,4 @@
-package com.ilkayaktas.margatsni.controller.api.instagram;
+package com.ilkayaktas.margatsni.controller.api.fivehundredpx;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -18,12 +18,9 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.ilkayaktas.margatsni.controller.api.instagram.http.InstagramAuthenticationService;
+import com.ilkayaktas.margatsni.controller.api.fivehundredpx.http.FiveHundredPxAuthenticationService;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
 import com.ilkayaktas.margatsni.utils.AppConstants;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 
 import io.reactivex.Single;
 
@@ -35,23 +32,23 @@ import io.reactivex.Single;
  *
  */
 @SuppressLint({ "NewApi", "SetJavaScriptEnabled" })
-public class InstagramDialog extends Dialog {
+public class FiveHundredPxDialog extends Dialog {
 	private WebView mWebView;
 	private LinearLayout mContent;
 	private String mAuthUrl;
-	private InstagramAuthenticationService instagramAuthenticationService;
-	private OnInstagramAuthentication onInstagramAuthentication;
+	private FiveHundredPxAuthenticationService fiveHundredPxAuthenticationService;
+	private OnApiAuthentication onApiAuthentication;
 
 
 	static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
 			ViewGroup.LayoutParams.MATCH_PARENT);
-	
-	static final String TAG = "Instagram-Android";
-	
-	public InstagramDialog(Context context, String authUrl, InstagramAuthenticationService instagramAuthenticationService, OnInstagramAuthentication onInstagramAuthentication) {
+
+	static final String TAG = "500px-Android";
+
+	public FiveHundredPxDialog(Context context, String authUrl, FiveHundredPxAuthenticationService fiveHundredPxAuthenticationService, OnApiAuthentication onApiAuthentication) {
 		super(context);
-		this.instagramAuthenticationService = instagramAuthenticationService;
-		this.onInstagramAuthentication = onInstagramAuthentication;
+		this.fiveHundredPxAuthenticationService = fiveHundredPxAuthenticationService;
+		this.onApiAuthentication = onApiAuthentication;
 		mAuthUrl = authUrl;
 	}
 	
@@ -110,7 +107,7 @@ public class InstagramDialog extends Dialog {
 	        
 		mWebView.setVerticalScrollBarEnabled(false);
 		mWebView.setHorizontalScrollBarEnabled(false);
-		mWebView.setWebViewClient(new InstagramWebViewClient());
+		mWebView.setWebViewClient(new ApiWebViewClient());
 		mWebView.getSettings().setJavaScriptEnabled(true);
 		mWebView.loadUrl(mAuthUrl);
 		mWebView.setLayoutParams(FILL);
@@ -135,30 +132,18 @@ public class InstagramDialog extends Dialog {
 
 	}
 	
-	private class InstagramWebViewClient extends WebViewClient {
+	private class ApiWebViewClient extends WebViewClient {
 
 		@Override
 		public boolean shouldOverrideUrlLoading(WebView view, String url) {
 			Log.d(TAG, "Redirecting URL " + url);
 	        	
-			if (url.startsWith(AppConstants.INSTAGRAM_CALBACK_URL)) {
+			if (url.startsWith(AppConstants.FIVEHUNDREDPX_CALBACK_URL)) {
 
 				Uri uri = Uri.parse(url);
-				String code= null;
-				try {
-					code = URLDecoder.decode(uri.getQueryParameter("code"), "UTF-8");
-					
-					Single<UserInfo> user = instagramAuthenticationService.authenticate(AppConstants.INSTAGRAM_CLIENT_ID,
-							AppConstants.INSTAGRAM_CLIENT_SECRET, "authorization_code",
-							AppConstants.INSTAGRAM_CALBACK_URL, code);
-					
-					onInstagramAuthentication.onSucces(user);
 
-				} catch (UnsupportedEncodingException e) {
-					e.printStackTrace();
-				}
-
-	        	InstagramDialog.this.dismiss();
+				System.out.println(uri);
+				FiveHundredPxDialog.this.dismiss();
 	        		
 	        	return true;
 			}
@@ -170,7 +155,7 @@ public class InstagramDialog extends Dialog {
 		public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {	
 			super.onReceivedError(view, errorCode, description, failingUrl);
 
-			InstagramDialog.this.dismiss();
+			FiveHundredPxDialog.this.dismiss();
 			
 			Log.d(TAG, "Page error: " + description);
 		}
@@ -190,7 +175,7 @@ public class InstagramDialog extends Dialog {
 		}
 	}
 	
-	public interface OnInstagramAuthentication{
+	public interface OnApiAuthentication {
 		void onSucces(Single<UserInfo> user);
 	}
 }

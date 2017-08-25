@@ -11,4 +11,6 @@ public interface MainMvpPresenter<V extends MainMvpView> extends MvpPresenter<V>
 	void authenticateInstagram();
 	
 	void getCurrentUser();
+
+	void authenticateFiveHundredPx();
 }

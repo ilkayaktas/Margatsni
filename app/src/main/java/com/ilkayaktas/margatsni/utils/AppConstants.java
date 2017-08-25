@@ -42,11 +42,11 @@ public final class AppConstants {
     
     public static final int REPORT_RECORD_HISTORY_COUNT = 10;
 
-    public static final String AUTH_URL = "https://api.instagram.com/oauth/authorize/?";
+    public static final String INSTAGRAM_AUTH_URL = "https://api.instagram.com/oauth/authorize/?";
 
-    public static final String ACCESS_TOKEN_URL = "https://api.instagram.com/oauth/access_token";
+    public static final String INSTAGRAM_ACCESS_TOKEN_URL = "https://api.instagram.com/oauth/access_token";
 
-    public static final String API_BASE_URL = "https://api.instagram.com/v1";
+    public static final String INSTAGRAM_API_BASE_URL = "https://api.instagram.com/v1/";
 
     public static final String INSTAGRAM_CLIENT_ID = "82d5b817e82e41c39352649e29fd864e";
 
@@ -59,6 +59,8 @@ public final class AppConstants {
     public static final String FIVEHUNDREDPX_CUSTOMER_SECRET = "kMkLTphXzai5TvDf6LG5pSTRwlxLgE40IjMv9kZb";
 
     public static final String FIVEHUNDREDPX_CALBACK_URL = "http://www.ilkayaktas.com";
+
+    public static final String FIVEHUNDREDPX_API_BASE_URL = "https://api.500px.com/v1/";
 
     private AppConstants() {
         // This utility class is not publicly instantiable

@@ -39,7 +39,9 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 		// Attach presenter
 		mPresenter.onAttach(MainActivity.this);
 
-		mPresenter.authenticateInstagram();
+//		mPresenter.authenticateInstagram();
+
+		mPresenter.authenticateFiveHundredPx();
 	}
 
 	@Override

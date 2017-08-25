@@ -3,8 +3,11 @@ package com.ilkayaktas.margatsni.controller.api;
 
 import android.content.Context;
 
+import com.ilkayaktas.margatsni.controller.api.fivehundredpx.FiveHundredPxDialog;
+import com.ilkayaktas.margatsni.controller.api.fivehundredpx.http.FiveHundredPxAuthenticationService;
+import com.ilkayaktas.margatsni.controller.api.fivehundredpx.model.entity.RequestToken;
 import com.ilkayaktas.margatsni.controller.api.instagram.InstagramDialog;
-import com.ilkayaktas.margatsni.controller.api.instagram.http.AuthenticationService;
+import com.ilkayaktas.margatsni.controller.api.instagram.http.InstagramAuthenticationService;
 import com.ilkayaktas.margatsni.controller.api.instagram.http.UserService;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.api.Scope;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
@@ -22,21 +25,25 @@ import io.reactivex.Single;
 @Singleton
 public class ApiHelper implements IApiHelper {
     @Inject
-    AuthenticationService queryAuth;
+    InstagramAuthenticationService queryAuth;
 
     @Inject
     UserService queryApi;
 
-    public ApiHelper(AuthenticationService queryAuth, UserService queryApi){
+    @Inject
+    FiveHundredPxAuthenticationService authenticetionFiveHundred;
+
+    public ApiHelper(InstagramAuthenticationService queryAuth, UserService queryApi, FiveHundredPxAuthenticationService authenticetionFiveHundred){
         this.queryAuth = queryAuth;
         this.queryApi = queryApi;
+        this.authenticetionFiveHundred = authenticetionFiveHundred;
     }
     
     @Override
     public void authenticate(Context context, Scope scope, InstagramDialog.OnInstagramAuthentication onInstagramAuthentication) {
         final Single<UserInfo>[] user = new Single[1];
         
-        String authUrl = AppConstants.AUTH_URL + "client_id=" +
+        String authUrl = AppConstants.INSTAGRAM_AUTH_URL + "client_id=" +
                         AppConstants.INSTAGRAM_CLIENT_ID +
                         "&redirect_uri=" + AppConstants.INSTAGRAM_CALBACK_URL +
                         "&response_type=code"+"&scope="+ scope.toString();
@@ -54,6 +61,16 @@ public class ApiHelper implements IApiHelper {
 
     @Override
     public Single<UserInfo> getUser(String userId) {
+        return null;
+    }
+
+    @Override
+    public Single<RequestToken> requestToken(Context context, String oauth_callback) {
+
+        String authUrl = AppConstants.FIVEHUNDREDPX_API_BASE_URL + "authorize?sdk_key="+AppConstants.FIVEHUNDREDPX_CUSTOMER_KEY+
+                                                                "&callback="+AppConstants.FIVEHUNDREDPX_CALBACK_URL;
+        FiveHundredPxDialog mDialog = new FiveHundredPxDialog(context, authUrl, authenticetionFiveHundred, null);
+        mDialog.show();
         return null;
     }
 }

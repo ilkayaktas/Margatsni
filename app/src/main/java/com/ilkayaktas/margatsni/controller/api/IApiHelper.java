@@ -16,11 +16,12 @@
 package com.ilkayaktas.margatsni.controller.api;
 
 
+import com.ilkayaktas.margatsni.controller.api.fivehundredpx.FiveHundredPxApi;
 import com.ilkayaktas.margatsni.controller.api.instagram.InstagramApi;
 
 /**
  * Created by ilkay on 01/07/2017.
  */
 
-public interface IApiHelper extends InstagramApi{
+public interface IApiHelper extends InstagramApi, FiveHundredPxApi {
 }
