@@ -4,6 +4,7 @@ package com.ilkayaktas.margatsni.controller.api;
 import android.app.Activity;
 import android.content.Context;
 
+import com.ilkayaktas.margatsni.controller.api.fivehundredpx.FiveHundredPxDialog;
 import com.ilkayaktas.margatsni.controller.api.fivehundredpx.http.FiveHundredPxAuthenticationService;
 import com.ilkayaktas.margatsni.controller.api.fivehundredpx.model.entity.RequestToken;
 import com.ilkayaktas.margatsni.controller.api.instagram.InstagramDialog;
@@ -11,7 +12,9 @@ import com.ilkayaktas.margatsni.controller.api.instagram.http.InstagramAuthentic
 import com.ilkayaktas.margatsni.controller.api.instagram.http.UserService;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.api.Scope;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
+import com.ilkayaktas.margatsni.controller.services.AsyncResponse;
 import com.ilkayaktas.margatsni.controller.services.MobssAsyncTask;
+import com.ilkayaktas.margatsni.controller.strategy.OAuthAccessTokenStrategy;
 import com.ilkayaktas.margatsni.controller.strategy.OAuthStrategy;
 import com.ilkayaktas.margatsni.utils.AppConstants;
 
@@ -69,7 +72,22 @@ public class ApiHelper implements IApiHelper {
     @Override
     public Single<RequestToken> requestToken(Context context, String oauth_callback) {
 
-        new MobssAsyncTask((Activity) context, new OAuthStrategy(context)).execute();
+        new MobssAsyncTask(new OAuthStrategy(context), new AsyncResponse() {
+            @Override
+            public void processFinish(String authorizationUrl) {
+
+                System.out.println(authorizationUrl);
+
+                new FiveHundredPxDialog(context, service, requestToken, authorizationUrl, new FiveHundredPxDialog.OnApiAuthentication() {
+
+                    @Override
+                    public void onSucces(String verifier) {
+                        new MobssAsyncTask((Activity) context, new OAuthAccessTokenStrategy(service,requestToken,verifier)).execute();
+                    }
+
+                }).show();
+            }
+        }).execute();
 
         return null;
     }

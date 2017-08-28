@@ -5,6 +5,7 @@ import com.github.scribejava.core.model.OAuth1RequestToken;
 
 /**
  * Created by iaktas on 28.08.2017.
+ * This class is required for Scribejava library
  */
 
 public class Px500Api extends DefaultApi10a {

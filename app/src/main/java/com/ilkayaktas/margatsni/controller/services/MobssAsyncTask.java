@@ -1,10 +1,7 @@
 package com.ilkayaktas.margatsni.controller.services;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
-import android.view.Gravity;
-import android.view.WindowManager;
 
 import com.ilkayaktas.margatsni.controller.strategy.Strategy;
 
@@ -15,15 +12,15 @@ import javax.inject.Inject;
  * Created by ilkay on 05/02/2017.
  */
 
-public class MobssAsyncTask extends AsyncTask<Void, Void, Void> {
+public class MobssAsyncTask extends AsyncTask<Void, Void, String> {
     
-    Activity baseActivity;
+    AsyncResponse response;
     Strategy strategy;
     
     @Inject
-    public MobssAsyncTask(Activity baseActivity, Strategy strategy) {
-        this.baseActivity = baseActivity;
+    public MobssAsyncTask(Strategy strategy, AsyncResponse response) {
         this.strategy = strategy;
+        this.response = response;
     }
     
     private ProgressDialog progressDialog;
@@ -33,22 +30,17 @@ public class MobssAsyncTask extends AsyncTask<Void, Void, Void> {
     protected void onPreExecute() {
         super.onPreExecute();
 
-        startProgressDialogBelow();
     }
 
     @Override
-    protected Void doInBackground(Void... params) {
-    
-        strategy.execute();
-        
-        return null;
+    protected String doInBackground(Void... params) {
+        return strategy.execute();
     }
 
     @Override
-    protected void onPostExecute(Void result) {
+    protected void onPostExecute(String result) {
         super.onPostExecute(result);
-
-        stopProgressDialog();
+        response.processFinish(result);
     }
 
     @Override
@@ -57,22 +49,13 @@ public class MobssAsyncTask extends AsyncTask<Void, Void, Void> {
     }
 
     @Override
-    protected void onCancelled(Void result) {
+    protected void onCancelled(String result) {
         super.onCancelled(result);
     }
 
-    private void startProgressDialogBelow() {
-        progressDialog = ProgressDialog.show(baseActivity, "", "Lütfen bekleyiniz!", true);
-        progressDialog.getWindow().setGravity(Gravity.CENTER);
-        WindowManager.LayoutParams wmlp = progressDialog.getWindow().getAttributes();
-        wmlp.y = baseActivity.getResources().getDisplayMetrics().heightPixels / 4;
-        progressDialog.getWindow().setAttributes(wmlp);
-        progressDialog.setCancelable(false);
-    }
 
-    private void stopProgressDialog() {
-        if (progressDialog != null) {
-            progressDialog.cancel();
-        }
-    }
+}
+
+public interface AsyncResponse {
+    void processFinish(String output);
 }
