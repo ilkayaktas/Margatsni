@@ -78,4 +78,9 @@ dependencies {
     compile 'com.android.support:support-v4:25.3.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.0.0'
 
+    // Scribejava for OAuth
+    compile group: 'com.github.scribejava', name: 'scribejava-core', version: '4.2.0'
+
+
+
 }

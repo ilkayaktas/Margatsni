@@ -42,7 +42,10 @@ public class MainActivity extends BaseActivity implements MainMvpView {
 //		mPresenter.authenticateInstagram();
 
 		mPresenter.authenticateFiveHundredPx();
+
 	}
+
+
 
 	@Override
 	protected void onStart() {

@@ -18,11 +18,12 @@ import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
-import com.ilkayaktas.margatsni.controller.api.fivehundredpx.http.FiveHundredPxAuthenticationService;
-import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
+import com.github.scribejava.core.model.OAuth1RequestToken;
+import com.github.scribejava.core.oauth.OAuth10aService;
 import com.ilkayaktas.margatsni.utils.AppConstants;
 
-import io.reactivex.Single;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 
 
 /**
@@ -36,8 +37,9 @@ public class FiveHundredPxDialog extends Dialog {
 	private WebView mWebView;
 	private LinearLayout mContent;
 	private String mAuthUrl;
-	private FiveHundredPxAuthenticationService fiveHundredPxAuthenticationService;
 	private OnApiAuthentication onApiAuthentication;
+	private OAuth10aService service;
+	private final OAuth1RequestToken requestToken;
 
 
 	static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -45,11 +47,12 @@ public class FiveHundredPxDialog extends Dialog {
 
 	static final String TAG = "500px-Android";
 
-	public FiveHundredPxDialog(Context context, String authUrl, FiveHundredPxAuthenticationService fiveHundredPxAuthenticationService, OnApiAuthentication onApiAuthentication) {
+	public FiveHundredPxDialog(Context context, OAuth10aService service, OAuth1RequestToken requestToken, String authUrl, OnApiAuthentication onApiAuthentication) {
 		super(context);
-		this.fiveHundredPxAuthenticationService = fiveHundredPxAuthenticationService;
 		this.onApiAuthentication = onApiAuthentication;
-		mAuthUrl = authUrl;
+		this.mAuthUrl = authUrl;
+		this.service = service;
+		this.requestToken = requestToken;
 	}
 	
 	@Override
@@ -142,7 +145,16 @@ public class FiveHundredPxDialog extends Dialog {
 
 				Uri uri = Uri.parse(url);
 
-				System.out.println(uri);
+				String oauthVerifier = null;
+				try {
+
+					oauthVerifier = URLDecoder.decode(uri.getQueryParameter("oauth_verifier"), "UTF-8");
+					onApiAuthentication.onSucces(oauthVerifier);
+
+				} catch (UnsupportedEncodingException e) {
+					e.printStackTrace();
+				}
+
 				FiveHundredPxDialog.this.dismiss();
 	        		
 	        	return true;
@@ -176,6 +188,6 @@ public class FiveHundredPxDialog extends Dialog {
 	}
 	
 	public interface OnApiAuthentication {
-		void onSucces(Single<UserInfo> user);
+		void onSucces(String verifier);
 	}
 }
