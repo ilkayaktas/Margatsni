@@ -33,12 +33,12 @@ public class ApiHelper implements IApiHelper {
     UserService queryApi;
 
     @Inject
-    FiveHundredPxAuthenticationService authenticetionFiveHundred;
+    FiveHundredPxAuthenticationService authenticationFiveHundred;
 
-    public ApiHelper(InstagramAuthenticationService queryAuth, UserService queryApi, FiveHundredPxAuthenticationService authenticetionFiveHundred){
+    public ApiHelper(InstagramAuthenticationService queryAuth, UserService queryApi, FiveHundredPxAuthenticationService authenticationFiveHundred){
         this.queryAuth = queryAuth;
         this.queryApi = queryApi;
-        this.authenticetionFiveHundred = authenticetionFiveHundred;
+        this.authenticationFiveHundred = authenticationFiveHundred;
     }
     
     @Override
