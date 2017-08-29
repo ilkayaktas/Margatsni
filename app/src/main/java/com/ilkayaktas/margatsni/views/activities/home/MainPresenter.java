@@ -49,7 +49,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
 
 	@Override
 	public void authenticateFiveHundredPx() {
-		getIDataManager().authenticate500px((Context) getMvpView(), AppConstants.FIVEHUNDREDPX_CALBACK_URL, new FiveHundredPxDialog.OnApiAuthentication() {
+		getIDataManager().authenticate500px((Context) getMvpView(), AppConstants.FIVEHUNDREDPX_CALBACK_URL, new FiveHundredPxDialog.On500pxAuthentication() {
 			@Override
 			public void onSucces(String accessToken) {
 				System.out.println("500px access token: "+accessToken);

@@ -7,6 +7,6 @@ import android.content.Context;
  */
 
 public interface FiveHundredPxApi {
-    void authenticate500px(Context context, String oauth_callback, FiveHundredPxDialog.OnApiAuthentication onApiAuthentication);
+    void authenticate500px(Context context, String oauth_callback, FiveHundredPxDialog.On500pxAuthentication on500pxAuthentication);
 
 }

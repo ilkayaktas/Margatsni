@@ -35,7 +35,7 @@ public class FiveHundredPxDialog extends Dialog {
 	private WebView mWebView;
 	private LinearLayout mContent;
 	private String mAuthUrl;
-	private OnApiAuthentication onApiAuthentication;
+	private On500pxAuthentication on500pxAuthentication;
 
 
 	static final FrameLayout.LayoutParams FILL = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -43,9 +43,9 @@ public class FiveHundredPxDialog extends Dialog {
 
 	static final String TAG = "500px-Android";
 
-	public FiveHundredPxDialog(Context context, String authUrl, OnApiAuthentication onApiAuthentication) {
+	public FiveHundredPxDialog(Context context, String authUrl, On500pxAuthentication on500pxAuthentication) {
 		super(context);
-		this.onApiAuthentication = onApiAuthentication;
+		this.on500pxAuthentication = on500pxAuthentication;
 		this.mAuthUrl = authUrl;
 	}
 	
@@ -144,7 +144,7 @@ public class FiveHundredPxDialog extends Dialog {
 
 					// get verifier
 					oauthVerifier = URLDecoder.decode(uri.getQueryParameter("oauth_verifier"), "UTF-8");
-					onApiAuthentication.onSucces(oauthVerifier);
+					on500pxAuthentication.onSucces(oauthVerifier);
 
 				} catch (UnsupportedEncodingException e) {
 					e.printStackTrace();
@@ -182,7 +182,7 @@ public class FiveHundredPxDialog extends Dialog {
 		}
 	}
 	
-	public interface OnApiAuthentication {
+	public interface On500pxAuthentication {
 		void onSucces(String verifier);
 	}
 }

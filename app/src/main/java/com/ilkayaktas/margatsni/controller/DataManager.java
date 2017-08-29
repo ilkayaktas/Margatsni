@@ -63,7 +63,7 @@ public class DataManager implements IDataManager {
 	}
 
 	@Override
-	public void authenticate500px(Context context, String oauth_callback, FiveHundredPxDialog.OnApiAuthentication onApiAuthentication) {
-		mIApiHelper.authenticate500px(context, oauth_callback, onApiAuthentication);
+	public void authenticate500px(Context context, String oauth_callback, FiveHundredPxDialog.On500pxAuthentication on500pxAuthentication) {
+		mIApiHelper.authenticate500px(context, oauth_callback, on500pxAuthentication);
 	}
 }

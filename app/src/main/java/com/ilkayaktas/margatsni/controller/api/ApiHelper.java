@@ -67,7 +67,7 @@ public class ApiHelper implements IApiHelper {
     }
 
     @Override
-    public void authenticate500px(Context context, String oauth_callback, FiveHundredPxDialog.OnApiAuthentication onApiAuthentication) {
+    public void authenticate500px(Context context, String oauth_callback, FiveHundredPxDialog.On500pxAuthentication on500pxAuthentication) {
 
         OAuthStrategy requestTokenRetrieverStrategy = new OAuthStrategy();
         // Get request token
@@ -84,7 +84,7 @@ public class ApiHelper implements IApiHelper {
                             // get access token
                             new MobssAsyncTask(accessTokenRetrieverStrategy, accessToken -> {
                                 System.out.println(accessToken);
-                                onApiAuthentication.onSucces(accessToken);
+                                on500pxAuthentication.onSucces(accessToken);
                             }).execute();
                     }).show();
         }).execute();
