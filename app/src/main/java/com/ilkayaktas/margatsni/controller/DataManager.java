@@ -3,7 +3,7 @@ package com.ilkayaktas.margatsni.controller;
 import android.content.Context;
 
 import com.ilkayaktas.margatsni.controller.api.IApiHelper;
-import com.ilkayaktas.margatsni.controller.api.fivehundredpx.model.entity.RequestToken;
+import com.ilkayaktas.margatsni.controller.api.fivehundredpx.FiveHundredPxDialog;
 import com.ilkayaktas.margatsni.controller.api.instagram.InstagramDialog;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.api.Scope;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
@@ -48,8 +48,8 @@ public class DataManager implements IDataManager {
 	}
 
 	@Override
-	public void authenticate(Context context, Scope scope, InstagramDialog.OnInstagramAuthentication onInstagramAuthentication) {
-		mIApiHelper.authenticate(context, scope, onInstagramAuthentication);
+	public void authenticateInstagram(Context context, Scope scope, InstagramDialog.OnInstagramAuthentication onInstagramAuthentication) {
+		mIApiHelper.authenticateInstagram(context, scope, onInstagramAuthentication);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class DataManager implements IDataManager {
 	}
 
 	@Override
-	public Single<RequestToken> requestToken(Context context, String oauth_callback) {
-		return mIApiHelper.requestToken(context, oauth_callback);
+	public void authenticate500px(Context context, String oauth_callback, FiveHundredPxDialog.OnApiAuthentication onApiAuthentication) {
+		mIApiHelper.authenticate500px(context, oauth_callback, onApiAuthentication);
 	}
 }

@@ -3,7 +3,7 @@ package com.ilkayaktas.margatsni.views.activities.home;
 
 import android.content.Context;
 
-import com.ilkayaktas.margatsni.controller.api.fivehundredpx.model.entity.RequestToken;
+import com.ilkayaktas.margatsni.controller.api.fivehundredpx.FiveHundredPxDialog;
 import com.ilkayaktas.margatsni.controller.api.instagram.InstagramDialog;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.api.Scope;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
@@ -27,7 +27,7 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
 	
 	@Override
 	public void authenticateInstagram() {
-		getIDataManager().authenticate((Context) getMvpView(), Scope.ALL, new InstagramDialog.OnInstagramAuthentication() {
+		getIDataManager().authenticateInstagram((Context) getMvpView(), Scope.ALL, new InstagramDialog.OnInstagramAuthentication() {
 			@Override
 			public void onSucces(Single<UserInfo> user) {
 				user.subscribeOn(Schedulers.io())
@@ -49,11 +49,13 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
 
 	@Override
 	public void authenticateFiveHundredPx() {
-		Single<RequestToken> requestTokenSingle = getIDataManager().requestToken((Context) getMvpView(), AppConstants.FIVEHUNDREDPX_CALBACK_URL);
+		getIDataManager().authenticate500px((Context) getMvpView(), AppConstants.FIVEHUNDREDPX_CALBACK_URL, new FiveHundredPxDialog.OnApiAuthentication() {
+			@Override
+			public void onSucces(String accessToken) {
+				System.out.println("500px access token: "+accessToken);
+			}
+		});
 
-//		requestTokenSingle.subscribeOn(Schedulers.io())
-//				.observeOn(AndroidSchedulers.mainThread())
-//				.subscribe(MainPresenter.this::onSuccessFiveHundredPx, MainPresenter.this::onErrorFiveHundredPx);
 	}
 
 	private void onSuccessAuthentication(UserInfo userInfo) {
@@ -63,14 +65,6 @@ public class MainPresenter<V extends MainMvpView> extends BasePresenter<V>
 	
 	private void onSuccessUser(UserInfo userInfo) {
 		System.out.println("__"+userInfo.accessToken);
-	}
-
-	private void onSuccessFiveHundredPx(RequestToken requestToken){
-		System.out.println(requestToken.toString());
-	}
-
-	private void onErrorFiveHundredPx(Throwable throwable) {
-		System.out.println("error...!!!");
 	}
 
 }

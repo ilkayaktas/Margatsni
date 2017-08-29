@@ -12,7 +12,7 @@ import io.reactivex.Single;
  */
 
 public interface InstagramApi {
-    void authenticate(Context context, Scope scope, InstagramDialog.OnInstagramAuthentication onInstagramAuthentication);
+    void authenticateInstagram(Context context, Scope scope, InstagramDialog.OnInstagramAuthentication onInstagramAuthentication);
     Single<UserInfo> getCurrentUser();
     Single<UserInfo> getUser(String userId);
 }

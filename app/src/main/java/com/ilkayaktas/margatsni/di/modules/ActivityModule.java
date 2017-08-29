@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.graphics.Typeface;
 
 import com.ilkayaktas.margatsni.controller.IDataManager;
-import com.ilkayaktas.margatsni.controller.services.MobssAsyncTask;
-import com.ilkayaktas.margatsni.controller.strategy.Strategy;
 import com.ilkayaktas.margatsni.di.annotations.ActivityContext;
 import com.ilkayaktas.margatsni.di.annotations.PerActivity;
 import com.ilkayaktas.margatsni.views.activities.another.AnotherMvpPresenter;
@@ -76,12 +74,6 @@ public class ActivityModule {
     @PerActivity
     AnotherFragmentMvpPresenter<AnotherFragmentMvpView> providesAnotherMvpPresenter(IDataManager IDataManager) {
         return new AnotherFragmentPresenter<>(IDataManager);
-    }
-
-    @Provides
-    @PerActivity
-    MobssAsyncTask providesMobssAsyncTask(Activity activity, Strategy strategy) {
-        return new MobssAsyncTask(activity, strategy);
     }
 
 }

@@ -1,18 +1,15 @@
 package com.ilkayaktas.margatsni.controller.api;
 
 
-import android.app.Activity;
 import android.content.Context;
 
 import com.ilkayaktas.margatsni.controller.api.fivehundredpx.FiveHundredPxDialog;
 import com.ilkayaktas.margatsni.controller.api.fivehundredpx.http.FiveHundredPxAuthenticationService;
-import com.ilkayaktas.margatsni.controller.api.fivehundredpx.model.entity.RequestToken;
 import com.ilkayaktas.margatsni.controller.api.instagram.InstagramDialog;
 import com.ilkayaktas.margatsni.controller.api.instagram.http.InstagramAuthenticationService;
 import com.ilkayaktas.margatsni.controller.api.instagram.http.UserService;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.api.Scope;
 import com.ilkayaktas.margatsni.controller.api.instagram.model.entity.users.basicinfo.UserInfo;
-import com.ilkayaktas.margatsni.controller.services.AsyncResponse;
 import com.ilkayaktas.margatsni.controller.services.MobssAsyncTask;
 import com.ilkayaktas.margatsni.controller.strategy.OAuthAccessTokenStrategy;
 import com.ilkayaktas.margatsni.controller.strategy.OAuthStrategy;
@@ -45,7 +42,7 @@ public class ApiHelper implements IApiHelper {
     }
     
     @Override
-    public void authenticate(Context context, Scope scope, InstagramDialog.OnInstagramAuthentication onInstagramAuthentication) {
+    public void authenticateInstagram(Context context, Scope scope, InstagramDialog.OnInstagramAuthentication onInstagramAuthentication) {
         final Single<UserInfo>[] user = new Single[1];
         
         String authUrl = AppConstants.INSTAGRAM_AUTH_URL + "client_id=" +
@@ -70,25 +67,27 @@ public class ApiHelper implements IApiHelper {
     }
 
     @Override
-    public Single<RequestToken> requestToken(Context context, String oauth_callback) {
+    public void authenticate500px(Context context, String oauth_callback, FiveHundredPxDialog.OnApiAuthentication onApiAuthentication) {
 
-        new MobssAsyncTask(new OAuthStrategy(context), new AsyncResponse() {
-            @Override
-            public void processFinish(String authorizationUrl) {
+        OAuthStrategy requestTokenRetrieverStrategy = new OAuthStrategy();
+        // Get request token
+        new MobssAsyncTask(requestTokenRetrieverStrategy, authorizationUrl -> {
 
-                System.out.println(authorizationUrl);
+            System.out.println(authorizationUrl);
 
-                new FiveHundredPxDialog(context, service, requestToken, authorizationUrl, new FiveHundredPxDialog.OnApiAuthentication() {
+            // Let user log in
+            new FiveHundredPxDialog(context, authorizationUrl,
 
-                    @Override
-                    public void onSucces(String verifier) {
-                        new MobssAsyncTask((Activity) context, new OAuthAccessTokenStrategy(service,requestToken,verifier)).execute();
-                    }
-
-                }).show();
-            }
+                        verifier -> {
+                            OAuthAccessTokenStrategy accessTokenRetrieverStrategy =
+                                    new OAuthAccessTokenStrategy(requestTokenRetrieverStrategy.getService(),requestTokenRetrieverStrategy.getRequestToken(),verifier);
+                            // get access token
+                            new MobssAsyncTask(accessTokenRetrieverStrategy, accessToken -> {
+                                System.out.println(accessToken);
+                                onApiAuthentication.onSucces(accessToken);
+                            }).execute();
+                    }).show();
         }).execute();
 
-        return null;
     }
 }

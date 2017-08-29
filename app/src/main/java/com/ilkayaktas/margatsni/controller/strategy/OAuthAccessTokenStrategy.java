@@ -2,11 +2,7 @@ package com.ilkayaktas.margatsni.controller.strategy;
 
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuth1RequestToken;
-import com.github.scribejava.core.model.OAuthRequest;
-import com.github.scribejava.core.model.Response;
-import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth10aService;
-import com.ilkayaktas.margatsni.utils.AppConstants;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutionException;
@@ -27,22 +23,27 @@ public class OAuthAccessTokenStrategy implements Strategy  {
     }
 
     @Override
-    public void execute() {
+    public String execute() {
         try {
-            final OAuth1AccessToken accessToken = service.getAccessToken(requestToken, verifier);
+            // get access token
+            OAuth1AccessToken accessToken = service.getAccessToken(requestToken, verifier);
 
             System.out.println("(if your curious it looks like this: " + accessToken + ", 'rawResponse'='" + accessToken.getRawResponse() + "')");
 
-            final OAuthRequest request = new OAuthRequest(Verb.GET, AppConstants.FIVEHUNDREDPX_API_BASE_URL);
-            service.signRequest(accessToken, request);
+            return accessToken.getToken();
 
-            final Response response = service.execute(request);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
+//            final OAuthRequest request = new OAuthRequest(Verb.GET, AppConstants.FIVEHUNDREDPX_API_BASE_URL);
+//
+//            service.signRequest(accessToken, request);
+//
+//            final Response response = service.execute(request);
+//
+//            return response.toString();
+
+        } catch (InterruptedException | IOException | ExecutionException e) {
             e.printStackTrace();
         }
+
+        return null;
     }
 }

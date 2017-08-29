@@ -1,6 +1,5 @@
 package com.ilkayaktas.margatsni.controller.services;
 
-import android.app.ProgressDialog;
 import android.os.AsyncTask;
 
 import com.ilkayaktas.margatsni.controller.strategy.Strategy;
@@ -22,9 +21,6 @@ public class MobssAsyncTask extends AsyncTask<Void, Void, String> {
         this.strategy = strategy;
         this.response = response;
     }
-    
-    private ProgressDialog progressDialog;
-    
     
     @Override
     protected void onPreExecute() {
@@ -54,8 +50,4 @@ public class MobssAsyncTask extends AsyncTask<Void, Void, String> {
     }
 
 
-}
-
-public interface AsyncResponse {
-    void processFinish(String output);
 }

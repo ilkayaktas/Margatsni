@@ -1,7 +1,5 @@
 package com.ilkayaktas.margatsni.controller.strategy;
 
-import android.content.Context;
-
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
@@ -17,41 +15,20 @@ import java.util.concurrent.ExecutionException;
 
 public class OAuthStrategy implements Strategy {
 
-    private Context context;
+    private OAuth10aService service;
+    private OAuth1RequestToken requestToken;
 
-    public OAuthStrategy(Context context) {
-        this.context = context;
-    }
-    
     @Override
     public String execute() {
         try {
-            OAuth10aService service = new ServiceBuilder(AppConstants.FIVEHUNDREDPX_CUSTOMER_KEY)
+            service = new ServiceBuilder(AppConstants.FIVEHUNDREDPX_CUSTOMER_KEY)
                     .apiSecret(AppConstants.FIVEHUNDREDPX_CUSTOMER_SECRET)
                     .build(Px500Api.instance());
 
-            OAuth1RequestToken requestToken = service.getRequestToken();
-    
-            String authorizationUrl = service.getAuthorizationUrl(requestToken);
-            
-            return authorizationUrl;
+            // get request token
+            requestToken = service.getRequestToken();
 
-//            ((Activity) context).runOnUiThread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    String authorizationUrl = service.getAuthorizationUrl(requestToken);
-//                    System.out.println(authorizationUrl);
-//
-//                    new FiveHundredPxDialog(context, service, requestToken, authorizationUrl, new FiveHundredPxDialog.OnApiAuthentication() {
-//
-//                        @Override
-//                        public void onSucces(String verifier) {
-//                            new MobssAsyncTask((Activity) context, new OAuthAccessTokenStrategy(service,requestToken,verifier)).execute();
-//                        }
-//
-//                    }).show();
-//                }
-//            });
+            return service.getAuthorizationUrl(requestToken);
 
         } catch (InterruptedException | ExecutionException | IOException e) {
             e.printStackTrace();
@@ -59,5 +36,11 @@ public class OAuthStrategy implements Strategy {
         return null;
     }
 
+    public OAuth10aService getService() {
+        return service;
+    }
 
+    public OAuth1RequestToken getRequestToken() {
+        return requestToken;
+    }
 }
